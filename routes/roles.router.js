@@ -4,9 +4,8 @@ const RolesService = require('../services/roles.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const service = new RolesService();
 const {
-  createRolesDto, getRolesIdDto,
+  createRolesDto, getRolesIdDto
   //updateRolesDto,
-  //getRolesIdDto,
 } = require('../dtos/roles.dto');
 
 //Es para crear el rol desde navegador
@@ -48,7 +47,7 @@ router.get(
   validatorHandler(getRolesIdDto, 'params'),
   async(req, res, next) => {
     try {
-      const {id} = req.params;
+      const { id } = req.params;
       const rol = await service.getById(id);
       res.json({
         success: true,
@@ -67,9 +66,10 @@ router.delete(
   validatorHandler(getRolesIdDto, 'params'),
   async (req, res) => {
     const { id } = req.params;
+    const rol = await service.delete(id);
     res.json({
       message: 'delete',
-      id,
+      data:rol,
     });
   }
 );

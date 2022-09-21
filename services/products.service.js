@@ -56,12 +56,7 @@ class ProductService {
     const product = this.products.find((item) => item.id === id);
     //NOT FOUND
     validateData(product, NOTFOUND, 'No encontrado', (data) => !data);
-    validateData(
-      product,
-      CONFLICT,
-      'CONFLICTO, el producto esta bloqueado.',
-      (data) => data.isActive == false
-    );
+    validateData(product, CONFLICT, 'CONFLICTO, el producto esta bloqueado.', (data) => data.isActive == false);
     return product;
   }
   async update(id, changes) {

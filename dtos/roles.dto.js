@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 //SCHEMA PARA DATOS REQUERIDOS Y LOGICA DE NEGOCIO
-const id = Joi.number().integer();
+const id = Joi.number();
 const isActive = Joi.boolean();
 const name = Joi.string().min(3).max(50);
 

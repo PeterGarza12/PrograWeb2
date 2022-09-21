@@ -1,7 +1,6 @@
 const faker = require('faker');
-const { validateData, NOTFOUND, CONFLICT } = require('../utils');
 const boom = require('@hapi/boom');
-//const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
 
 class RolesService {
 
@@ -50,10 +49,10 @@ class RolesService {
   }
 
   async getById(id){
-    const rol = this.roles.find((item)=>item.id === id);
+    const rol = this.roles.find((item) => item.id === id);
 
-    validateData(rol, NOTFOUND, 'Rol no encontrado',      (data)=>!data);
-    validateData(rol, CONFLICT, 'El rol no está activo',  (data)=>data.isActive ==false);
+    validateData(rol, NOTFOUND, 'No encontrado',          (data) => !data);
+    validateData(rol, CONFLICT, 'El rol no está activo',  (data) => data.isActive == false);
     return rol;
   }
 
@@ -72,11 +71,11 @@ class RolesService {
   }
 
   async delete(id) {
-    const index = this.products.findIndex((item) => item.id == id);
+    const index = this.roles.findIndex((item) => item.id == id);
     if (index === -1) {
       if (index === -1) throw boom.notFound('Producto no encontrado');
     }
-    this.products.splice(index, 1);
+    this.roles.splice(index, 1);
     return {
       message: 'Eliminado',
       id,
