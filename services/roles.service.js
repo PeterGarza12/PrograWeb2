@@ -1,5 +1,6 @@
 const faker = require('faker');
-//const boom = require('@hapi/boom');
+const { validateData, NOTFOUND, CONFLICT } = require('../utils');
+const boom = require('@hapi/boom');
 //const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
 
 class RolesService {
@@ -48,16 +49,38 @@ class RolesService {
     });
   }
 
-  getById(){
+  async getById(id){
+    const rol = this.roles.find((item)=>item.id === id);
 
+    validateData(rol, NOTFOUND, 'Rol no encontrado',      (data)=>!data);
+    validateData(rol, CONFLICT, 'El rol no está activo',  (data)=>data.isActive ==false);
+    return rol;
   }
 
   getActive(){
-
+    return new Promise((resolve, rejected)=>{
+      setTimeout(()=>{
+        const rol = this.roles.filter((item)=>item.isActive === true);
+        if(rol.length>0){
+          resolve(rol);
+        }
+        else{
+          rejected('No hay activos');
+        }
+      },2000);
+    });
   }
 
-  delete(){
-
+  async delete(id) {
+    const index = this.products.findIndex((item) => item.id == id);
+    if (index === -1) {
+      if (index === -1) throw boom.notFound('Producto no encontrado');
+    }
+    this.products.splice(index, 1);
+    return {
+      message: 'Eliminado',
+      id,
+    };
   }
 
 }
