@@ -11,7 +11,7 @@ class ProductService {
     for (let index = 0; index < limit; index++) {
       this.products.push({
         isActive: faker.datatype.boolean(),
-        id: faker.datatype.uuid(),
+        id: faker.datatype.number(),
         name: faker.commerce.productName(),
         price: parseInt(faker.commerce.price(), 10),
         image: faker.image.imageUrl(),
