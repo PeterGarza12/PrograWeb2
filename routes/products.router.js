@@ -35,6 +35,8 @@ router.get(
     }
   }
 );
+
+
 router.post(
   '/',
   validatorHandler(createProductDto, 'body'),
