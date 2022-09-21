@@ -59,6 +59,7 @@ class ProductService {
     validateData(product, CONFLICT, 'CONFLICTO, el producto esta bloqueado.', (data) => data.isActive == false);
     return product;
   }
+
   async update(id, changes) {
     const index = this.products.findIndex((item) => item.id === id);
 

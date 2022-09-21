@@ -58,7 +58,7 @@ router.get(
       next(error);
     }
   }
-)
+);
 
 //Eliminar un elemento con el id
 router.delete(

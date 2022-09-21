@@ -14,7 +14,7 @@ class RolesService {
     for (let index = 0; index < limit; index++) {
       this.roles.push({
         isActive: true,
-        id: faker.datatype.number(),
+        id: faker.datatype.uuid(),
         name: faker.commerce.productName(),
       });
     }
@@ -23,7 +23,7 @@ class RolesService {
   async create(data) {
     const newRole = {
       isActive: true,
-      id: faker.datatype.number(),
+      id: faker.datatype.uuid(),
       ...data,
     };
     this.roles.push(newRole);
