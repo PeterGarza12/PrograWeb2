@@ -10,11 +10,11 @@ class RolesService {
   }
 
   generate() {
-    const limit = 100;
+    const limit = 3;
     for (let index = 0; index < limit; index++) {
       this.roles.push({
-        isActive: faker.datatype.boolean(),
-        id: faker.datatype.number().integer(), //Checar si jala esto con integer
+        isActive: true,
+        id: faker.datatype.number(),
         name: faker.commerce.productName(),
       });
     }
@@ -22,6 +22,7 @@ class RolesService {
 
   async create(data) {
     const newRole = {
+      isActive: true,
       id: faker.datatype.number(),
       ...data,
     };
