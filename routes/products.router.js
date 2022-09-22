@@ -3,40 +3,16 @@ const router = express.Router();
 const ProductService = require('../services/products.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const service = new ProductService();
+
 const {
   createProductDto,
   updateProductDto,
   getProductId,
+  getProductCategory,
+  getProductName
 } = require('../dtos/products.dto');
 
-router.get('/', async (req, res) => {
-  const { size } = req.query;
-  const limit = size || 10;
-  const products = await service.find(limit);
-  res.json(products);
-});
-
-//STATUS CODE
-
-router.get(
-  '/:id',
-  validatorHandler(getProductId, 'params'),
-  async (req, res, next) => {
-    try {
-      const { id } = req.params;
-      const product = await service.findOne(id);
-      res.json({
-        success: true,
-        message: 'Este es el producto encontrado',
-        data: product,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-
+//Crear producto
 router.post(
   '/',
   validatorHandler(createProductDto, 'body'),
@@ -54,6 +30,73 @@ router.post(
     }
   }
 );
+
+//Obtener todos los productos en general
+router.get('/', async (req, res) => {
+  const { size } = req.query;
+  const limit = size || 10;
+  const products = await service.getAll(limit);
+  res.json(products);
+});
+
+//Obtener producto mediante id
+router.get(
+  '/:id',
+  validatorHandler(getProductId, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const product = await service.getProductById(id);
+      res.json({
+        success: true,
+        message: 'Este es el producto encontrado',
+        data: product,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+//Obtener productos mediante categoría
+router.get(
+  '/cat/:idCategory',
+  validatorHandler(getProductCategory, 'params'),
+  async (req, res, next) => {
+    try {
+      const { idCat } = req.params;
+      const product = await service.getProductByCategory(idCat);
+      res.json({
+        success: true,
+        message: 'Este es el producto encontrado',
+        data: product,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+//Obtener producto mediante nombre
+router.get(
+  '/name/:name',
+  validatorHandler(getProductName, 'params'),
+  async (req, res, next) => {
+    try {
+      const { name } = req.params;
+      const product = await service.getProductByName(name);
+      res.json({
+        success: true,
+        message: 'Este es el producto encontrado',
+        data: product,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+
 
 //MENSAJES DE ERROR
 router.patch(

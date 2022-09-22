@@ -7,14 +7,18 @@ class ProductService {
     this.generate();
   }
   generate() {
-    const limit = 100;
+    const limit = 10;
     for (let index = 0; index < limit; index++) {
       this.products.push({
-        isActive: faker.datatype.boolean(),
-        id: faker.datatype.uuid(),
-        name: faker.commerce.productName(),
-        price: parseInt(faker.commerce.price(), 10),
-        image: faker.image.imageUrl(),
+        id:           faker.datatype.uuid(),
+        name:         faker.datatype.string(5),
+        description:  faker.lorem.sentence(15),
+        idCategory:   faker.datatype.uuid(),
+        image:        faker.image.imageUrl(),
+        price:        parseInt(faker.commerce.price(), 10),
+        rate:         faker.datatype.number(5),
+        isActive:     faker.datatype.boolean(),
+
       });
     }
   }
@@ -29,7 +33,7 @@ class ProductService {
     return newProduct;
   }
 
-  find(limit) {
+  getAll(limit) {
     return new Promise((resolve, rejected) => {
       setTimeout(() => {
         var products = this.products.slice(0, limit);
@@ -51,14 +55,37 @@ class ProductService {
     });
   }
 
-  async findOne(id) {
-    //const name = this.getTotal(); PRUEBA DE ERROR DE TRY Y CATCH
+  //Encontrar mediante el id del producto
+  async getProductById(id) {
+
     const product = this.products.find((item) => item.id === id);
-    //NOT FOUND
+
     validateData(product, NOTFOUND, 'No encontrado', (data) => !data);
     validateData(product, CONFLICT, 'CONFLICTO, el producto esta bloqueado.', (data) => data.isActive == false);
+
     return product;
   }
+
+  //Encontrar todos los productos de la categoría que se pida
+  getProductByCategory(idCat) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const productsByCat = this.products.filter((item) => item.idCat === idCat);
+        resolve(productsByCat);
+      }, 2000);
+    });
+  }
+
+    //Encontrar mediante el nombre del producto
+    async getProductByName(name) {
+
+      const product = this.products.find((item) => item.name === name);
+
+      validateData(product, NOTFOUND, 'No encontrado', (data) => !data);
+      validateData(product, CONFLICT, 'CONFLICTO, el producto esta bloqueado.', (data) => data.isActive == false);
+
+      return product;
+    }
 
   async update(id, changes) {
     const index = this.products.findIndex((item) => item.id === id);
