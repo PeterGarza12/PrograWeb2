@@ -1,11 +1,14 @@
 const faker = require('faker');
 const boom = require('@hapi/boom');
 const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+
 class ProductService {
+
   constructor() {
     this.products = [];
     this.generate();
   }
+
   generate() {
     const limit = 10;
     for (let index = 0; index < limit; index++) {
