@@ -5,7 +5,6 @@ const validatorHandler = require('./../middlewares/validator.handler');
 const service = new UsersService();
 const {
   createUserDto, getUserIdDto, updateUserDto
-  //updateUserDto,
 } = require('../dtos/users.dto');
 
 //Es para crear el rol desde navegador
