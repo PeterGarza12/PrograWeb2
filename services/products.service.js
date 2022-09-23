@@ -73,6 +73,7 @@ class ProductService {
     };
     return this.products[index];
   }
+
   async updateComplete(id, changes) {
     const index = this.products.findIndex((item) => item.id === id);
 

@@ -30,10 +30,6 @@ class RolesService {
     return newRole;
   }
 
-  update(){
-
-  }
-
   getAll(limit){
     return new Promise((resolve, rejected)=>{
       setTimeout(()=>{
