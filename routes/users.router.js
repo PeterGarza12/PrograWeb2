@@ -4,13 +4,13 @@ const UsersService = require('../services/users.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const service = new UsersService();
 const {
-  createUserDto, getUserIdDto
+  createUserDto, getUserIdDto, updateUserDto
   //updateUserDto,
 } = require('../dtos/users.dto');
 
 //Es para crear el rol desde navegador
 router.post(
-  '/register',
+  '/signup',
   validatorHandler(createUserDto, 'body'),
   async(req, res, next) => {
     const body = req.body;
@@ -54,6 +54,29 @@ router.get(
   }
 );
 
+//Modificar usuario
+router.patch(
+  '/update/:id',
+  validatorHandler(getUserIdDto, 'params'),
+  validatorHandler(updateUserDto, 'body'),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const body = req.body;
+      const user = await service.update(id, body);
+      res.json({
+        message: 'Usuario modificado',
+        data: user,
+        id,
+      });
+    } catch (error) {
+      res.status(404).json({
+        message: error.message,
+      });
+    }
+  }
+);
+
 //Eliminar un elemento con el id
 router.delete(
   '/:id',
@@ -65,6 +88,29 @@ router.delete(
       message: 'delete',
       data:user,
     });
+  }
+);
+
+//Modificar al usuario completamente
+router.put(
+  '/:id',
+  validatorHandler(getUserIdDto, 'params'),
+  validatorHandler(updateUserDto, 'body'),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const body = req.body;
+      const user = await service.updateComplete(id, body);
+      res.json({
+        message: 'update total',
+        data: user,
+        id,
+      });
+    } catch (error) {
+      res.status(404).json({
+        message: error.message,
+      });
+    }
   }
 );
 

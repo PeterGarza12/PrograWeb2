@@ -61,9 +61,33 @@ class UsersService {
     return user;
   }
 
-  //Modificar usuario
-  update(){
+  //Modificar usuario parcialmente
+  async update(id, changes) {
+    const index = this.users.findIndex((item) => item.id === id);
 
+    if (index === -1) throw boom.notFound('Usuario no encontrado');
+
+    var currentUser = this.users[index];
+    this.users[index] = {
+      ...currentUser,
+      ...changes,
+    };
+    return this.users[index];
+  }
+
+  //Modificar usuario completamente
+  async updateComplete(id, changes) {
+    const index = this.users.findIndex((item) => item.id === id);
+
+    if (index === -1) throw boom.notFound('Usuario no encontrado');
+    //throw new Error('Product not found'); Forma tradicional
+
+    var currentUser = this.users[index];
+    this.users[index] = {
+      id: currentUser.id,
+      ...changes,
+    };
+    return this.users[index];
   }
 
   //Eliminar usuario
