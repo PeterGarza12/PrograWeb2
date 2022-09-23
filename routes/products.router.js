@@ -98,7 +98,7 @@ router.get(
 
 
 
-//MENSAJES DE ERROR
+//Modificar parcialmente un producto
 router.patch(
   '/:id',
   validatorHandler(getProductId, 'params'),
@@ -121,6 +121,7 @@ router.patch(
   }
 );
 
+//Modificar completamente un producto
 router.put(
   '/:id',
   validatorHandler(getProductId, 'params'),
@@ -143,13 +144,16 @@ router.put(
   }
 );
 
+//Eliminar un producto
 router.delete(
   '/:id',
   validatorHandler(getProductId, 'params'),
   async (req, res) => {
     const { id } = req.params;
+    const product = await service.delete(id);
     res.json({
       message: 'delete',
+      data: product,
       id,
     });
   }

@@ -70,7 +70,7 @@ class ProductService {
   getProductByCategory(idCat) {
     return new Promise((resolve) => {
       setTimeout(() => {
-        const productsByCat = this.products.filter((item) => item.idCat === idCat);
+        const productsByCat = this.products.find((item) => item.idCat === idCat);
         resolve(productsByCat);
       }, 2000);
     });
@@ -87,11 +87,12 @@ class ProductService {
       return product;
     }
 
+    //Modificar parcialmente un producto mediante su id
   async update(id, changes) {
     const index = this.products.findIndex((item) => item.id === id);
 
     if (index === -1) throw boom.notFound('Producto no encontrado');
-    //throw new Error('Product not found'); Forma tradicional
+
 
     var currentProduct = this.products[index];
     this.products[index] = {
@@ -100,6 +101,8 @@ class ProductService {
     };
     return this.products[index];
   }
+
+  //Modificar completamente un producto mediante su id
   async updateComplete(id, changes) {
     const index = this.products.findIndex((item) => item.id === id);
 
@@ -114,6 +117,7 @@ class ProductService {
     return this.products[index];
   }
 
+  //Eliminar un producto mediante su id
   async delete(id) {
     const index = this.products.findIndex((item) => item.id == id);
     if (index === -1) {
