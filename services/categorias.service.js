@@ -31,7 +31,7 @@ class CategoriasService {
   async update(id, changes) {
     const index = this.categorias.findIndex((item) => item.id === id);
 
-    if (index === -1) throw boom.notFound('Categoria no encontrado');
+    if (index === -1) throw boom.notFound('Categoria no encontrada');
 
 
     var currentCategory = this.categorias[index];
@@ -50,7 +50,7 @@ class CategoriasService {
           resolve(categorias);
         }
         else{
-          rejected('');
+          rejected('No se encontraron categorías');
         }
       }, 5000);
     });
@@ -60,7 +60,7 @@ class CategoriasService {
     const categoria = this.categorias.find((item) => item.id === id);
 
     validateData(categoria, NOTFOUND, 'No encontrado',          (data) => !data);
-    validateData(categoria, CONFLICT, 'La categoria no esta activa',  (data) => data.isActive == false);
+    validateData(categoria, CONFLICT, 'La categoría no esta activa',  (data) => data.isActive == false);
     return categoria;
   }
 
@@ -69,7 +69,7 @@ class CategoriasService {
   async delete(id) {
     const index = this.categorias.findIndex((item) => item.id == id);
     if (index === -1) {
-      if (index === -1) throw boom.notFound('Categoria no encontrada');
+      if (index === -1) throw boom.notFound('Categoría no encontrada');
     }
     this.categorias.splice(index, 1);
     return {

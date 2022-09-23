@@ -9,15 +9,12 @@ const {
 } = require('../dtos/categorias.dto');
 
 
-
 router.get('/', async (req, res) => {
   const { size } = req.query;
   const limit = size || 10;
   const products = await service.getAll(limit);
   res.json(products);
 });
-
-
 
 
 router.get(
@@ -29,8 +26,26 @@ router.get(
       const categoria = await service.getById(id);
       res.json({
         success: true,
-        message: 'Este es la categoria encontrada',
+        message: 'Este es la categoría encontrada',
         data: categoria,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  '/',
+  validatorHandler(createCategoriasDto, 'body'),
+  async(req, res, next) => {
+    const body = req.body;
+    try {
+      const newCat = await service.create(body);
+      res.json({
+        success: true,
+        message: 'Se ha creado la categoría',
+        data: newCat,
       });
     } catch (error) {
       next(error);
@@ -46,7 +61,7 @@ router.delete(
     const { id } = req.params;
     const categoria = await service.delete(id);
     res.json({
-      message: 'delete',
+      message: 'Categoría eleminiada',
       data:categoria,
     });
   }
