@@ -84,7 +84,7 @@ router.delete(
     const { id } = req.params;
     const user = await service.delete(id);
     res.json({
-      message: 'delete',
+      message: 'Se ha eliminado correctamente',
       data:user,
     });
   }
@@ -101,7 +101,7 @@ router.put(
       const body = req.body;
       const user = await service.updateComplete(id, body);
       res.json({
-        message: 'update total',
+        message: 'Se ha modificado el usuario completamente',
         data: user,
         id,
       });

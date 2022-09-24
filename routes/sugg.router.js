@@ -21,7 +21,7 @@ router.post(
       const newSuggestion = await service.create(body);
       res.json({
         success: true,
-        message: 'Producto creado correctamente',
+        message: 'Sugerencia creada correctamente',
         data: newSuggestion,
       });
     } catch (error) {
@@ -48,7 +48,7 @@ router.get(
       const suggestion = await service.getSuggestionById(id);
       res.json({
         success: true,
-        message: 'Este es la sugerencia encontrada',
+        message: 'Esta es la sugerencia encontrada',
         data: suggestion,
       });
     } catch (error) {
@@ -67,7 +67,7 @@ router.get(
       const suggestion = await service.getSuggestionByIdUser(idUser);
       res.json({
         success: true,
-        message: 'Este es la sugerencia encontrada',
+        message: 'Esta es la sugerencia encontrada',
         data: suggestion,
       });
     } catch (error) {
@@ -87,7 +87,7 @@ router.patch(
       const body = req.body;
       const suggestion = await service.update(idUser, body);
       res.json({
-        message: 'update',
+        message: 'Se ha modificado parcialmente una sugerencia',
         data: suggestion,
         idUser,
       });

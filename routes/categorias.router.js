@@ -26,7 +26,7 @@ router.get(
       const categoria = await service.getById(id);
       res.json({
         success: true,
-        message: 'Este es la categoría encontrada',
+        message: 'Esta es la categoría encontrada',
         data: categoria,
       });
     } catch (error) {
@@ -61,7 +61,7 @@ router.delete(
     const { id } = req.params;
     const categoria = await service.delete(id);
     res.json({
-      message: 'Categoría eleminiada',
+      message: 'Categoría eliminada',
       data:categoria,
     });
   }

@@ -109,7 +109,7 @@ router.patch(
       const body = req.body;
       const product = await service.update(id, body);
       res.json({
-        message: 'update',
+        message: 'Se ha modificado parcialmente el producto',
         data: product,
         id,
       });
@@ -132,7 +132,7 @@ router.put(
       const body = req.body;
       const product = await service.updateComplete(id, body);
       res.json({
-        message: 'update total',
+        message: 'Se ha modificado completamente el producto',
         data: product,
         id,
       });
@@ -152,7 +152,7 @@ router.delete(
     const { id } = req.params;
     const product = await service.delete(id);
     res.json({
-      message: 'delete',
+      message: 'Se ha eliminado el producto',
       data: product,
       id,
     });

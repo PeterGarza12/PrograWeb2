@@ -68,7 +68,7 @@ router.delete(
     const { id } = req.params;
     const rol = await service.delete(id);
     res.json({
-      message: 'delete',
+      message: 'Se ha eliminado el elemento',
       data:rol,
     });
   }
