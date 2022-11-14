@@ -1,46 +1,42 @@
-const faker = require('faker');
-//const boom = require('@hapi/boom');
-const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+const boom = require('@hapi/boom');
+const Model = require('../models/reports.model');
 
 class ReportService {
 
-  constructor(){
-    this.reports = [];
-  }
+  constructor(){}
 
   //Crear reportes (llega la data según lo que mande el router)
   async create(data){
-    const newReport = {
-      id: faker.datatype.uuid(),
-      ...data,
-    };
-    this.reports.push(newReport);
-    return newReport;
+    const model = new Model(data);
+    await model.save();
+    return data;
   }
 
   //Mostrar todos los reportes
-  getAll(limit){
-    return new Promise((resolve, rejected) => {
-      setTimeout(()=>{
-        var reports = this.reports.slice(0, limit);
-        if(reports.length>0){
-          resolve(reports);
-        }
-        else{
-          rejected('a');
-        }
-      },5000);
-    });
+  async getAll(limit){
+    let response = {};
+    let reportsDB = await Model.find();
+
+    //Obtenemos solo la cantidad deseada de registros
+    response['reports'] = limit
+      ? reportsDB.filter((item, index) => item && index < limit)
+      : reportsDB;
+
+    return response;
   }
 
   //Mostrar el reporte que quieras mediante su id
-  getReportById(id){
-    const report = this.reports.find((item)=> item.id === id);
+  async getReportById(id){
+    const product = await Model.findOne({
+      _id: id,
+    });
 
-    validateData(report, NOTFOUND, 'No encontrado', (data) => !data);
-    validateData(report, CONFLICT, 'CONFLICTO, el reporte esta bloqueado.', (data) => data.isActive == false);
+    if (product == undefined || product == null)
+      throw boom.notFound('No se encontro el producto');
+    else if (product.length <= 0)
+        throw boom.notFound('No se encontro ningún registro');
 
-    return report;
+    return product;
   }
 
 }
