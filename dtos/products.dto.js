@@ -1,16 +1,17 @@
 const Joi = require('joi');
 
 //SCHEMA PARA DATOS REQUERIDOS Y LOGICA DE NEGOCIO
-const id =          Joi.string();
+const id =          Joi.number().integer();
 const name =        Joi.string().min(3).max(50);
 const description = Joi.string().min(10).max(100);
-const idCategory =  Joi.string();
+const idCategory =  Joi.number().integer();
 const image =       Joi.string();
 const price =       Joi.number().integer().min(10);
 const rate =        Joi.number();
 const isActive =    Joi.boolean();
 
 const createProductDto = Joi.object({
+  id:           id.required(),
   name:         name.required(),
   description:  description.required(),
   idCategory:   idCategory.required(),

@@ -148,14 +148,19 @@ router.put(
 router.delete(
   '/:id',
   validatorHandler(getProductId, 'params'),
-  async (req, res) => {
-    const { id } = req.params;
-    const product = await service.delete(id);
-    res.json({
-      message: 'Se ha eliminado el producto',
-      data: product,
-      id,
-    });
+  async (req, res, next) => {
+    try{
+      const { id } = req.params;
+      const product = await service.delete(id);
+      res.json({
+        message: 'Se ha eliminado el producto',
+        data: product,
+        id,
+      });
+    }
+    catch(error){
+      next(error);
+    }
   }
 );
 

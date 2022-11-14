@@ -9,7 +9,6 @@ class UsersService {
 
   //Crear usuario
   async create(data) {
-
     const model = new Model(data);
     await model.save();
     return data;

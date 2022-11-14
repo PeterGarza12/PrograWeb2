@@ -1,52 +1,65 @@
-const faker = require('faker');
+//const faker = require('faker');
 const boom = require('@hapi/boom');
+const Model = require('../models/products.model');
 const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
 
 class ProductService {
 
   constructor() {
-    this.products = [];
-    this.generate();
+    // this.products = [];
+    // this.generate();
   }
 
-  generate() {
-    const limit = 10;
-    for (let index = 0; index < limit; index++) {
-      this.products.push({
-        id:           faker.datatype.uuid(),
-        name:         faker.datatype.string(5),
-        description:  faker.lorem.sentence(15),
-        idCategory:   faker.datatype.uuid(),
-        image:        faker.image.imageUrl(),
-        price:        parseInt(faker.commerce.price(), 10),
-        rate:         faker.datatype.number(5),
-        isActive:     faker.datatype.boolean(),
+  // generate() {
+  //   const limit = 10;
+  //   for (let index = 0; index < limit; index++) {
+  //     this.products.push({
+  //       id:           faker.datatype.uuid(),
+  //       name:         faker.datatype.string(5),
+  //       description:  faker.lorem.sentence(15),
+  //       idCategory:   faker.datatype.uuid(),
+  //       image:        faker.image.imageUrl(),
+  //       price:        parseInt(faker.commerce.price(), 10),
+  //       rate:         faker.datatype.number(5),
+  //       isActive:     faker.datatype.boolean(),
 
-      });
-    }
-  }
+  //     });
+  //   }
+  // }
 
   //FAKER
   async create(data) {
-    const newProduct = {
-      id: faker.datatype.uuid(),
-      ...data,
-    };
-    this.products.push(newProduct);
-    return newProduct;
+    // const newProduct = {
+    //   id: faker.datatype.uuid(),
+    //   ...data,
+    // };
+    // this.products.push(newProduct);
+    // return newProduct;
+    const model = new Model(data);
+    await model.save();
+    return data;
   }
 
-  getAll(limit) {
-    return new Promise((resolve, rejected) => {
-      setTimeout(() => {
-        var products = this.products.slice(0, limit);
-        if (products.length > 0) {
-          resolve(products);
-        } else {
-          rejected('');
-        }
-      }, 5000);
-    });
+  async getAll(limit) {
+    // return new Promise((resolve, rejected) => {
+    //   setTimeout(() => {
+    //     var products = this.products.slice(0, limit);
+    //     if (products.length > 0) {
+    //       resolve(products);
+    //     } else {
+    //       rejected('');
+    //     }
+    //   }, 5000);
+    // });
+    let response = {};
+    let productsDB = await Model.find();
+
+    //Obtenemos solo la cantidad deseada de registros
+    response['products'] = limit
+      ? productsDB.filter((item, index) => item && index < limit)
+      : productsDB;
+
+    return response;
   }
 
   findActiveProducts() {
@@ -61,22 +74,43 @@ class ProductService {
   //Encontrar mediante el id del producto
   async getProductById(id) {
 
-    const product = this.products.find((item) => item.id === id);
+    // const product = this.products.find((item) => item.id === id);
 
-    validateData(product, NOTFOUND, 'No encontrado', (data) => !data);
-    validateData(product, CONFLICT, 'CONFLICTO, el producto esta bloqueado.', (data) => data.isActive == false);
+    // validateData(product, NOTFOUND, 'No encontrado', (data) => !data);
+    // validateData(product, CONFLICT, 'CONFLICTO, el producto esta bloqueado.', (data) => data.isActive == false);
+
+    // return product;
+    const product = await Model.findOne({
+      id: id,
+    });
+
+    if (product == undefined || product == null)
+      throw boom.notFound('No se encontro el producto');
+    else if (product.length <= 0)
+        throw boom.notFound('No se encontro ningún registro');
 
     return product;
   }
 
   //Encontrar todos los productos de la categoría que se pida
-  getProductByCategory(idCat) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const productsByCat = this.products.find((item) => item.idCat === idCat);
-        resolve(productsByCat);
-      }, 2000);
+  async getProductByCategory(idCat) {
+    // return new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     const productsByCat = this.products.find((item) => item.idCat === idCat);
+    //     resolve(productsByCat);
+    //   }, 2000);
+    // });
+    const product = await Model.findOne({
+      idCat: idCat
     });
+
+
+    if (product == undefined || product == null)
+      throw boom.notFound('No se encontro el producto');
+    else if (product.length <= 0)
+        throw boom.notFound('No se encontro ningún registro');
+
+    return product;
   }
 
     //Encontrar mediante el nombre del producto
