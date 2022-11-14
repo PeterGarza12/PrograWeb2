@@ -1,78 +1,86 @@
-const faker = require('faker');
+//const faker = require('faker');
 const boom = require('@hapi/boom');
-const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+const Model = require('../models/users.model');
+//const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
 
 class UsersService {
 
-  constructor() {
-    this.users = [];
-    this.generate();
-  }
-
-  generate() {
-    const limit = 3;
-    for (let index = 0; index < limit; index++) {
-      this.users.push({
-        isActive: true,
-        id: faker.datatype.uuid(),
-        username: faker.internet.userName(),
-        // eslint-disable-next-line no-useless-escape
-        password: faker.internet.password(8,false,/^[a-zA-Z0-9\-_]$/),
-        email: faker.internet.email(),
-        role: faker.datatype.number({ min: 0, max: 2}),
-        phone: faker.phone.phoneNumber('811#######'),
-        image: faker.image.imageUrl(),
-      });
-    }
-  }
+  constructor() {}
 
   //Crear usuario
   async create(data) {
-    const newUser = {
-      isActive: true,
-      id: faker.datatype.uuid(),
-      ...data,
-    };
-    this.users.push(newUser);
-    return newUser;
+
+    const model = new Model(data);
+    await model.save();
+    return data;
   }
 
   //Traer todos los usuarios
-  getAll(limit){
-    return new Promise((resolve, rejected)=>{
-      setTimeout(()=>{
-        var users = this.users.slice(0, limit);
-        if(users.length>0){
-          resolve(users);
-        }
-        else{
-          rejected('');
-        }
-      }, 5000);
-    });
+  async getAll(limit){
+
+    let response = {};
+
+    let productsDB = await Model.find();
+
+    //Obtenemos solo la cantidad deseada de registros
+    response['users'] = limit
+      ? productsDB.filter((item, index) => item && index < limit)
+      : productsDB;
+
+    return response;
+
   }
 
   //Traer usuarios por id
   async getById(id){
-    const user = this.users.find((item) => item.id === id);
 
-    validateData(user, NOTFOUND, 'No encontrado',          (data) => !data);
-    validateData(user, CONFLICT, 'El usuario no está activo',  (data) => data.isActive == false);
+    const user = await Model.findOne({
+      _id: id,
+    });
+    if (user == undefined || user == null)
+      throw boom.notFound('No se encontro el usuario');
+    else if (user.length <= 0)
+      throw boom.notFound('No se encontro ningún registro');
     return user;
   }
 
   //Modificar usuario parcialmente
   async update(id, changes) {
-    const index = this.users.findIndex((item) => item.id === id);
 
-    if (index === -1) throw boom.notFound('Usuario no encontrado');
+    let user = await Model.findOne({
+      _id: id,
+    });
+    if (user == undefined || user == null)
+      throw boom.notFound('No se encontro el usuario');
+    else if (user.length <= 0)
+      throw boom.notFound('No se encontro ningún registro');
 
-    var currentUser = this.users[index];
-    this.users[index] = {
-      ...currentUser,
-      ...changes,
+    let userOriginal = {
+      isActive: user.isActive,
+      username: user.username,
+      password: user.password,
+      email: user.email,
+      role: user.role,
+      phone: user.phone,
+      image: user.image
     };
-    return this.users[index];
+
+    const { isActive, username, password, email, role, phone, image } = changes;
+    user.isActive = isActive;
+    user.username = username;
+    user.password = password;
+    user.email = email;
+    user.role = role;
+    user.phone = phone;
+    user.image = image;
+
+    user.save();
+
+    return {
+      original: userOriginal,
+      actualizado: user,
+    };
+
   }
 
   //Modificar usuario completamente
@@ -92,15 +100,18 @@ class UsersService {
 
   //Eliminar usuario
   async delete(id) {
-    const index = this.users.findIndex((item) => item.id == id);
-    if (index === -1) {
-      if (index === -1) throw boom.notFound('Usuario no encontrado');
-    }
-    this.users.splice(index, 1);
-    return {
-      message: 'Usuario eliminado',
-      id,
-    };
+
+    let user = await Model.findOne({
+      _id: id,
+    });
+
+    const { deletedCount } = await Model.deleteOne({
+      _id: id,
+    });
+    if (deletedCount <= 0)
+      throw boom.notFound('El registro seleccionado no existe');
+
+    return user;
   }
 
 }

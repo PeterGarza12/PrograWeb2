@@ -11,6 +11,7 @@ const phone = Joi.string().min(10).max(10);
 const image = Joi.string();
 
 const createUserDto = Joi.object({
+  isActive: isActive,
   username: username.required(),
   password: password.required(),
   email: email.required(),

@@ -1,10 +1,14 @@
 const express = require('express');
 const routerApi = require('./routes/');
+const db = require('./db');
 const {
   logErrors,
   errorHandler,
   boomErrorHandler,
 } = require('./middlewares/error.handler');
+const { DBURL } = require('./consts.json');
+//HACEMOS LA CONEXIÓN
+db(DBURL);
 
 const app = express();
 const port = 3000;

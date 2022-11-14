@@ -80,13 +80,18 @@ router.patch(
 router.delete(
   '/:id',
   validatorHandler(getUserIdDto, 'params'),
-  async (req, res) => {
-    const { id } = req.params;
-    const user = await service.delete(id);
-    res.json({
-      message: 'Se ha eliminado correctamente',
-      data:user,
-    });
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const user = await service.delete(id);
+      res.json({
+        message: 'Se ha eliminado correctamente',
+        data:user,
+      });
+    }
+    catch (error){
+      next(error);
+    }
   }
 );
 
