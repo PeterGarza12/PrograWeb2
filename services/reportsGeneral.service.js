@@ -1,5 +1,5 @@
 const boom = require('@hapi/boom');
-const Model = require('../models/reports.model');
+const Model = require('../models/reportsGeneral.model');
 
 class ReportService {
 
@@ -18,7 +18,7 @@ class ReportService {
     let reportsDB = await Model.find();
 
     //Obtenemos solo la cantidad deseada de registros
-    response['reports'] = limit
+    response['reportsGeneral'] = limit
       ? reportsDB.filter((item, index) => item && index < limit)
       : reportsDB;
 

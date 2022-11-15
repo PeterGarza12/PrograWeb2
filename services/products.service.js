@@ -49,9 +49,9 @@ class ProductService {
   }
 
   //Encontrar todos los productos de la categoría que se pida
-  async getProductByCategory(idCat) {
+  async getProductByCategory(idCategory) {
     const product = await Model.find({
-      idCat: idCat
+      idCategory: idCategory
     });
 
 

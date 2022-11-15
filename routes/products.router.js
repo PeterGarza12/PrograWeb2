@@ -64,8 +64,8 @@ router.get(
   validatorHandler(getProductCategory, 'params'),
   async (req, res, next) => {
     try {
-      const { idCat } = req.params;
-      const product = await service.getProductByCategory(idCat);
+      const { idCategory } = req.params;
+      const product = await service.getProductByCategory(idCategory);
       res.json({
         success: true,
         message: 'Este es el producto encontrado',
