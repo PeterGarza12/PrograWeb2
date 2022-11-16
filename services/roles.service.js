@@ -5,30 +5,15 @@ const Model = require('../models/roles.model');
 
 class RolesService {
 
-  constructor() {
-    // this.roles = [];
-    // this.generate();
-  }
-
-  // generate() {
-  //   const limit = 3;
-  //   for (let index = 0; index < limit; index++) {
-  //     this.roles.push({
-  //       isActive: true,
-  //       id: faker.datatype.uuid(),
-  //       name: faker.commerce.productName(),
-  //     });
-  //   }
-  // }
+  constructor() {}
 
   async create(data) {
     const model = new Model(data);
     await model.save();
     return data;
   }
-  }
 
-  getAll(limit){
+  async getAll(limit){
     let response = {};
     let rolesDB = await Model.find();
 
@@ -82,6 +67,7 @@ class RolesService {
   }
 
 
+}
 
 
 module.exports = RolesService;

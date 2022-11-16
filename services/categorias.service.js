@@ -1,23 +1,10 @@
 // const faker = require('faker');
 const boom = require('@hapi/boom');
 // const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
-const Model = require('../models/categorias.model');
+const Model = require('../models/categories.model');
 class CategoriasService {
 
-  constructor() {
-    this.categorias = [];
-    this.generate();
-  }
-
-  // generate() {
-  //   const limit = 3;
-  //   for (let index = 0; index < limit; index++) {
-  //     this.categorias.push({
-  //       id: faker.datatype.uuid(),
-  //       name: faker.commerce.productName(),
-  //     });
-  //   }
-  // }
+  constructor() {}
 
   async create(data) {
     const model = new Model(data);
@@ -38,7 +25,7 @@ class CategoriasService {
   //   return this.categorias[index];
   // }
 
-  getAll(limit){
+  async getAll(limit){
     let response = {};
     let categoriasDB = await Model.find();
 
@@ -55,25 +42,27 @@ class CategoriasService {
       id: id,
     });
 
-    if (product == undefined || categoria == null)
-      throw boom.notFound('No se encontro el producto');
-    else if (product.length <= 0)
+    if (categoria == undefined || categoria == null)
+      throw boom.notFound('No se encontro la categoria');
+    else if (categoria.length <= 0)
         throw boom.notFound('No se encontro ningún registro');
 
-    return product;
+    return categoria;
   }
 
 
   async delete(id) {
-    const index = this.categorias.findIndex((item) => item.id == id);
-    if (index === -1) {
-      if (index === -1) throw boom.notFound('Categoría no encontrada');
-    }
-    this.categorias.splice(index, 1);
-    return {
-      message: 'Eliminado',
-      id,
-    };
+    let category = await Model.findOne({
+      id: id,
+    });
+
+    const { deletedCategory } = await Model.deleteOne({
+      id: id,
+    });
+    if (deletedCategory <= 0)
+      throw boom.notFound('El registro seleccionado no existe');
+
+    return category;
   }
 
 }
