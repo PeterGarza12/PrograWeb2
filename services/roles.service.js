@@ -1,54 +1,55 @@
-const faker = require('faker');
+// const faker = require('faker');
 const boom = require('@hapi/boom');
-const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+// const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+const Model = require('../models/roles.model');
 
 class RolesService {
 
   constructor() {
-    this.roles = [];
-    this.generate();
+    // this.roles = [];
+    // this.generate();
   }
 
-  generate() {
-    const limit = 3;
-    for (let index = 0; index < limit; index++) {
-      this.roles.push({
-        isActive: true,
-        id: faker.datatype.uuid(),
-        name: faker.commerce.productName(),
-      });
-    }
-  }
+  // generate() {
+  //   const limit = 3;
+  //   for (let index = 0; index < limit; index++) {
+  //     this.roles.push({
+  //       isActive: true,
+  //       id: faker.datatype.uuid(),
+  //       name: faker.commerce.productName(),
+  //     });
+  //   }
+  // }
 
   async create(data) {
-    const newRole = {
-      isActive: true,
-      id: faker.datatype.uuid(),
-      ...data,
-    };
-    this.roles.push(newRole);
-    return newRole;
+    const model = new Model(data);
+    await model.save();
+    return data;
+  }
   }
 
   getAll(limit){
-    return new Promise((resolve, rejected)=>{
-      setTimeout(()=>{
-        var roles = this.roles.slice(0, limit);
-        if(roles.length>0){
-          resolve(roles);
-        }
-        else{
-          rejected('');
-        }
-      }, 5000);
-    });
+    let response = {};
+    let rolesDB = await Model.find();
+
+    //Obtenemos solo la cantidad deseada de registros
+    response['roles'] = limit
+      ? rolesDB.filter((item, index) => item && index < limit)
+      : rolesDB;
+
+    return response;
   }
 
   async getById(id){
-    const rol = this.roles.find((item) => item.id === id);
+    const rol = await Model.findOne({
+      id: id,
+    });
 
-    validateData(rol, NOTFOUND, 'No encontrado',          (data) => !data);
-    validateData(rol, CONFLICT, 'El rol no está activo',  (data) => data.isActive == false);
+    if (rol == undefined || rol == null)
+      throw boom.notFound('No se encontro el rol');
+    else if (rol.length <= 0)
+        throw boom.notFound('No se encontro ningún registro');
+
     return rol;
   }
 
@@ -67,17 +68,20 @@ class RolesService {
   }
 
   async delete(id) {
-    const index = this.roles.findIndex((item) => item.id == id);
-    if (index === -1) {
-      if (index === -1) throw boom.notFound('Producto no encontrado');
-    }
-    this.roles.splice(index, 1);
-    return {
-      message: 'Eliminado',
-      id,
-    };
+    let rol = await Model.findOne({
+      id: id,
+    });
+
+    const { deletedCount } = await Model.deleteOne({
+      id: id,
+    });
+    if (deletedCount <= 0)
+      throw boom.notFound('El registro seleccionado no existe');
+
+    return rol;
   }
 
-}
+
+
 
 module.exports = RolesService;
