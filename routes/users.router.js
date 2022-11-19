@@ -1,10 +1,14 @@
 const express = require('express');
 const router = express.Router();
+const boom = require('@hapi/boom');
 const UsersService = require('../services/users.service');
+const { encrypt, compare } = require('../utils/password.handler');
+const { signToken } = require('../utils/jwt.handler');
 const validatorHandler = require('./../middlewares/validator.handler');
+
 const service = new UsersService();
 const {
-  createUserDto, getUserIdDto, updateUserDto
+  createUserDto, getUserIdDto, updateUserDto, LoginDto
 } = require('../dtos/users.dto');
 
 //Es para crear el rol desde navegador
@@ -12,12 +16,14 @@ router.post(
   '/signup',
   validatorHandler(createUserDto, 'body'),
   async(req, res, next) => {
-    const body = req.body;
     try {
-      const newUser = await service.create(body);
+      const password = await encrypt(req.body['password']);
+      const bodyInsert = { ...req.body, password };
+      const newUser = await service.create(bodyInsert);
       res.json({
         success: true,
-        message: 'Se ha registrado el usuario',
+        token: await signToken(newUser),
+        message: 'Se ha registrado el usuario correctamente',
         data: newUser,
       });
     } catch (error) {
@@ -25,6 +31,35 @@ router.post(
     }
   }
 );
+
+router.post(
+  '/login',
+  validatorHandler(LoginDto, 'body'),
+  async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+      const user = await service.getByEmail(email); //FILTRO SELECT DEL PASSWORD
+      if (!user) {
+        throw boom.notFound('No se encontro el usuario');
+      }
+      const hashPassword = user.get('password'); //NO SE PUEDE ACCEDER DIRECTAMENTE A LA PROPIEDAD
+      const check = await compare(password, hashPassword);
+      if (!check) {
+        throw boom.unauthorized('No se encontro usuario');
+      }
+      user.set('password', undefined, {strict: false});
+      res.json({
+        success: true,
+        token: await signToken(user),
+        data: user,
+        message: 'Usuario logeado',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 
 //Obtiene todos los elementos de manera general
 router.get('/', async (req, res) => {

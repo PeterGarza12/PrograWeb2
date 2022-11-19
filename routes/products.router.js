@@ -3,6 +3,8 @@ const router = express.Router();
 const ProductService = require('../services/products.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const service = new ProductService();
+const checkRolHandler = require('../middlewares/checkRol.handler');
+const authHandler = require('../middlewares/auth.handler');
 
 const {
   createProductDto,
@@ -32,7 +34,10 @@ router.post(
 );
 
 //Obtener todos los productos en general
-router.get('/', async (req, res) => {
+router.get('/',
+authHandler,
+checkRolHandler(["user"]),
+ async (req, res) => {
   const { size } = req.query;
   const limit = size || 10;
   const products = await service.getAll(limit);

@@ -5,7 +5,7 @@ const isActive = Joi.boolean(); //siempre se creara en true desde la base
 const username = Joi.string().min(3).max(50);
 // eslint-disable-next-line no-useless-escape
 const password = Joi.string().pattern(new RegExp('^[a-zA-Z0-9\-_]{8}$'));
-const email = Joi.string().email();
+const email = Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } });
 const role = Joi.number().integer();
 const phone = Joi.string().min(10).max(10);
 const image = Joi.string();
@@ -24,6 +24,11 @@ const getUserIdDto = Joi.object({
   id: id.required(),
 });
 
+const LoginDto = Joi.object({
+  email: email.required(),
+  password: password.required(),
+});
+
 const updateUserDto = Joi.object({
   isActive: isActive,
   username: username,
@@ -38,6 +43,7 @@ module.exports = {
   createUserDto,
   getUserIdDto,
   updateUserDto,
+  LoginDto
 }
 
 //var reg_ex = /^((?=.*[A-Z])(?=.*\d)(?=.*[~@#%$^*”’_+=¿?¡!()\[\]{};:*,.-])(?!.* )).{8}$/;

@@ -1,4 +1,5 @@
 
 {
-  "DBURL": "mongodb+srv://Coba:6v5HjfI8XTLBtYfw@cluster0.ytn8cen.mongodb.net/MonterreyBBQ?retryWrites=true&w=majority"
+  "DBURL": "mongodb+srv://Coba:6v5HjfI8XTLBtYfw@cluster0.ytn8cen.mongodb.net/MonterreyBBQ?retryWrites=true&w=majority",
+  "JWT_SECRET": "amongustragangoanborgesa"
 }

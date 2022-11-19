@@ -9,9 +9,16 @@ class UsersService {
 
   //Crear usuario
   async create(data) {
-    const model = new Model(data);
-    await model.save();
-    return data;
+    // const model = new Model(data);
+    // await model.save();
+    // return data;
+    const exists = await Model.findOne({ email: data.email });
+    if (exists) {
+      throw boom.unauthorized('Ya existe un usuario con ese correo y nombre de usuario');
+    }
+    const userData = await Model.create(data);
+    userData.set("password", undefined, {strict: false});
+    return userData;
   }
 
   //Traer todos los usuarios
@@ -41,6 +48,28 @@ class UsersService {
     else if (user.length <= 0)
       throw boom.notFound('No se encontro ningún registro');
     return user;
+  }
+
+  //Traer usuarios por email
+  async getByEmail(email){
+
+    const user = await Model.findOne({
+      email: email,
+    });
+    if (user == undefined || user == null)
+      throw boom.notFound('No se encontro el usuario');
+    else if (user.length <= 0)
+      throw boom.notFound('No se encontro ningún registro');
+    return user;
+  }
+
+  async findOneDB(data) {
+    const User = await Model.findOne(data).select('password name role email');
+    if (User == undefined || User == null)
+      throw boom.notFound('No se encontro');
+    else if (User.length <= 0)
+      throw boom.notFound('No se encontro ningún registro');
+    return User;
   }
 
   //Modificar usuario parcialmente
