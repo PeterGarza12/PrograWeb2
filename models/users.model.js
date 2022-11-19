@@ -7,7 +7,7 @@ const usersSchema = new Schema({
   isActive: Boolean,
   username: String,
   password: String,
-  email: String,
+  email: {type: String, unique: true},
   role: Number,
   phone: String,
   image: String
