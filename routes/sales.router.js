@@ -63,7 +63,7 @@ router.get(
       const sale = await service.getByUserId(userid);
       res.json({
         success: true,
-        message: 'Este registro no fue encontrado',
+        message: 'Compras del usuario',
         data: sale,
       });
     } catch (error) {

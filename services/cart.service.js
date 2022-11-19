@@ -1,79 +1,77 @@
-const faker = require('faker');
 const boom = require('@hapi/boom');
-const { validateData, NOTFOUND } = require('./../utils');
+const Model = require('../models/cart.model');
 
 class CartsService {
 
-  constructor() {
-    this.carts = [];
-    this.generate();
-  }
-
-  generate() {
-    const limit = 3;
-    for (let index = 0; index < limit; index++) {
-      this.carts.push({
-        id: faker.datatype.uuid(),
-        userid: faker.datatype.uuid(),
-        products: faker.datatype.array(5),
-      });
-    }
-  }
+  constructor() {}
 
   async create(data) {
-    const newCart = {
-      id: faker.datatype.uuid(),
-      ...data,
-      products: [],
-    };
-    this.carts.push(newCart);
-    return newCart;
+    const model = new Model(data);
+    await model.save();
+    return data;
   }
 
     //Consigue el carrito por su id
     async getById(id){
-      const cart = this.carts.find((item) => item.id === id);
-
-      validateData(cart, NOTFOUND, 'Elemento no encontrado',          (data) => !data);
+      const cart = await Model.findOne({
+        _id: id,
+      });
+      if (cart == undefined || cart == null)
+        throw boom.notFound('No se encontro el carrito');
+      else if (cart.length <= 0)
+        throw boom.notFound('No se encontro ningún registro');
       return cart;
     }
 
     //Consigue el carrito por su id
     async getByUserId(userid){
-      const cart = this.carts.find((item) => item.userid === userid);
-
-      validateData(cart, NOTFOUND, 'Elemento no encontrado',          (data) => !data);
+      const cart = await Model.findOne({
+        userid: userid,
+      });
+      if (cart == undefined || cart == null)
+        throw boom.notFound('No se encontro el carrito');
+      else if (cart.length <= 0)
+        throw boom.notFound('No se encontro ningún registro');
       return cart;
     }
 
   //Modificar carrito
   async updateCart(userid, changes) {
-    const index = this.carts.findIndex((item) => item.userid === userid);
+    let cart = await Model.findOne({
+      userid: userid,
+    });
+    if (cart == undefined || cart == null)
+      throw boom.notFound('No se encontro el usuario');
+    else if (cart.length <= 0)
+      throw boom.notFound('No se encontro ningún registro');
 
-    if (index === -1) throw boom.notFound('Producto no encontrado');
-    //throw new Error('Product not found'); Forma tradicional
-
-    var currentCart = this.carts[index];
-    this.carts[index] = {
-      ...currentCart,
-      ...changes,
+    let cartOriginal = {
+      products: cart.products
     };
-    return this.carts[index];
+
+    const { products } = changes;
+    cart.products = products;
+
+    cart.save();
+
+    return {
+      original: cartOriginal,
+      actualizado: cart,
+    };
   }
 
   //No se ocupara, solo por motivos de testeo
-  getAll(limit){
-    return new Promise((resolve, rejected)=>{
-      setTimeout(()=>{
-        var carts = this.carts.slice(0, limit);
-        if(carts.length>0){
-          resolve(carts);
-        }
-        else{
-          rejected('');
-        }
-      }, 5000);
-    });
+  async getAll(limit){
+    let response = {};
+
+    let cartsDB = await Model.find();
+
+    //Obtenemos solo la cantidad deseada de registros
+    response['cart'] = limit
+      ? cartsDB.filter((item, index) => item && index < limit)
+      : cartsDB;
+
+    return response;
   }
 
 }

@@ -1,72 +1,81 @@
-const faker = require('faker');
 const boom = require('@hapi/boom');
-const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+const Model = require('../models/sugg.model');
+
 
 class SuggestionService {
 
-  constructor(){
-    this.suggestions = [];
-  }
+  constructor(){}
 
   //Crear sugerencia
   async create(data) {
-    const newSuggestion = {
-      id: faker.datatype.uuid(),
-      ...data,
-    };
-    this.suggestions.push(newSuggestion);
-    return newSuggestion;
+      const model = new Model(data);
+      await model.save();
+      return data;
   }
 
   //Traer todas las sugerencias
-  getAll(limit) {
-    return new Promise((resolve, rejected) => {
-      setTimeout(() => {
-        var suggestions = this.suggestions.slice(0, limit);
-        if (suggestions.length > 0) {
-          resolve(suggestions);
-        } else {
-          rejected('');
-        }
-      }, 5000);
-    });
+  async getAll(limit) {
+    let response = {};
+
+    let suggDB = await Model.find();
+
+    //Obtenemos solo la cantidad deseada de registros
+    response['suggestions'] = limit
+      ? suggDB.filter((item, index) => item && index < limit)
+      : suggDB;
+
+    return response;
   }
 
   //Encontrar sugerencia mediante el id de la misma
   async getSuggestionById(id) {
 
-    const suggestion = this.suggestions.find((item) => item.id === id);
-
-    validateData(suggestion, NOTFOUND, 'No encontrado', (data) => !data);
-    validateData(suggestion, CONFLICT, 'CONFLICTO, el suggestion esta bloqueado.', (data) => data.isActive == false);
-
-    return suggestion;
+    const sugg = await Model.findOne({
+      _id: id,
+    });
+    if (sugg == undefined || sugg == null)
+      throw boom.notFound('No se encontro el registro');
+    else if (sugg.length <= 0)
+      throw boom.notFound('No se encontro ningún registro');
+    return sugg;
   }
 
   //Encontrar sugerencia mediante el id del usuario
   async getSuggestionByIdUser(idUser) {
 
-    const suggestion = this.suggestions.find((item) => item.idUser === idUser);
-
-    validateData(suggestion, NOTFOUND, 'No encontrado', (data) => !data);
-    validateData(suggestion, CONFLICT, 'CONFLICTO, el suggestion esta bloqueado.', (data) => data.isActive == false);
-
-    return suggestion;
+    const sugg = await Model.findOne({
+      idUser: idUser,
+    });
+    if (sugg == undefined || sugg == null)
+      throw boom.notFound('No se encontro el registro');
+    else if (sugg.length <= 0)
+      throw boom.notFound('No se encontro ningún registro');
+    return sugg;
   }
 
   //Modificar parcialmente una sugerencia mediante id del usuario
   async update(idUser, changes) {
-    const index = this.suggestions.findIndex((item) => item.idUser === idUser);
+    let sugg = await Model.findOne({
+      idUser: idUser,
+    });
+    if (sugg == undefined || sugg == null)
+      throw boom.notFound('No se encontro el registro');
+    else if (sugg.length <= 0)
+      throw boom.notFound('No se encontro ningún registro');
 
-    if (index === -1) throw boom.notFound('Sugerencia no encontrado');
-
-
-    var currentSuggestion = this.suggestions[index];
-    this.suggestions[index] = {
-      ...currentSuggestion,
-      ...changes,
+    let suggOriginal = {
+      idCategory: sugg.idCategory
     };
-    return this.suggestions[index];
+
+    const { idCategory } = changes;
+    sugg.idCategory = idCategory;
+
+    sugg.save();
+
+    return {
+      original: suggOriginal,
+      actualizado: sugg,
+    };
   }
 
 }
