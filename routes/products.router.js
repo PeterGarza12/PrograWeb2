@@ -3,7 +3,7 @@ const router = express.Router();
 const ProductService = require('../services/products.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const service = new ProductService();
-const checkRolHandler = require('../middlewares/checkRol.handler');
+//const checkRolHandler = require('../middlewares/checkRol.handler');
 const authHandler = require('../middlewares/auth.handler');
 
 const {
@@ -36,7 +36,6 @@ router.post(
 //Obtener todos los productos en general
 router.get('/',
 authHandler,
-checkRolHandler(["admin"]),
  async (req, res) => {
   const { size } = req.query;
   const limit = size || 10;
