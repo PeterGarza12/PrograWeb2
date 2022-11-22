@@ -30,13 +30,9 @@ const LoginDto = Joi.object({
 });
 
 const updateUserDto = Joi.object({
-  isActive: isActive,
   username: username,
   password: password,
-  email: email,
-  role: role,
   phone: phone,
-  image: image,
 });
 
 module.exports = {

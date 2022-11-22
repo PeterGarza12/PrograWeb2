@@ -84,23 +84,17 @@ class UsersService {
       throw boom.notFound('No se encontro ningún registro');
 
     let userOriginal = {
-      isActive: user.isActive,
       username: user.username,
       password: user.password,
-      email: user.email,
-      role: user.role,
       phone: user.phone,
-      image: user.image
     };
 
-    const { isActive, username, password, email, role, phone, image } = changes;
-    user.isActive = isActive;
+    const { username, password, phone } = changes;
     user.username = username;
     user.password = password;
-    user.email = email;
-    user.role = role;
     user.phone = phone;
-    user.image = image;
+
+    console.log(user.password);
 
     user.save();
 

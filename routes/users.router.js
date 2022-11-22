@@ -96,9 +96,11 @@ router.patch(
   async (req, res) => {
     try {
       const { id } = req.params;
-      const body = req.body;
-      const user = await service.update(id, body);
+      const password = await encrypt(req.body['password']);
+      const bodyInsert = { ...req.body, password };
+      const user = await service.update(id, bodyInsert);
       res.json({
+        success: true,
         message: 'Usuario modificado',
         data: user,
         id,
