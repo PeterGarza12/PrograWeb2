@@ -36,7 +36,7 @@ router.post(
 //Obtener todos los productos en general
 router.get('/',
 authHandler,
-checkRolHandler(["user"]),
+checkRolHandler(["admin"]),
  async (req, res) => {
   const { size } = req.query;
   const limit = size || 10;

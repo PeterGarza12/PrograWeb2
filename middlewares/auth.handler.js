@@ -13,7 +13,7 @@ const authHandler = async (req, res, next) => {
     {
       throw boom.unauthorized('Error en el id del token');
     }
-    const user = await userService.findOneDB({id:dataToken.id});
+    const user = await userService.findOneDB({_id:dataToken.id});
     req.user = user;
     next();
   } catch (error) {

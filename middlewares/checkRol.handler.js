@@ -4,7 +4,6 @@ const checkRolHandler = (rol) => (req, res, next) => {
   try {
     const { user } = req;
     const rolesBy = user.role;
-    console.log(user);
     const checkValueRol = rol.some((rolSingle) => rolesBy.includes(rolSingle));
     if (!checkValueRol) {
       // res.status(403).send({

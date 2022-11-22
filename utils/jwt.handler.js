@@ -3,7 +3,7 @@ const { JWT_SECRET } = require('../consts.json');
 
 const signToken = async (user) => {
   const signToken = await jwt.sign({
-    _id: user.id,
+    id: user._id,
     role: user.role,
   },JWT_SECRET, {
     expiresIn:"2h"

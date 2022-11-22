@@ -6,7 +6,7 @@ const username = Joi.string().min(3).max(50);
 // eslint-disable-next-line no-useless-escape
 const password = Joi.string().pattern(new RegExp('^[a-zA-Z0-9\-_]{8}$'));
 const email = Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } });
-const role = Joi.number().integer();
+const role = Joi.array();
 const phone = Joi.string().min(10).max(10);
 const image = Joi.string();
 
