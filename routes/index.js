@@ -10,6 +10,7 @@ const reportsCategoryRouter = require('./reportsCategory.router');
 const reportsUserRouter = require('./reportsUser.router');
 const reportsGeneralRouter = require('./reportsGeneral.router');
 const suggestionsRouter = require('./sugg.router');
+const storageRouter = require('./storage.router');
 
 function routerApi(app) {
   const router = express.Router();
@@ -25,6 +26,7 @@ function routerApi(app) {
   router.use('/reportsUser', reportsUserRouter);
   router.use('/reportsGeneral', reportsGeneralRouter);
   router.use('/sugg', suggestionsRouter);
+  router.use('/storage', storageRouter);
 }
 
 module.exports = routerApi;

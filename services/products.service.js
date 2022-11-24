@@ -37,7 +37,7 @@ class ProductService {
   //Encontrar mediante el id del producto
   async getProductById(id) {
     const product = await Model.findOne({
-      id: id,
+      _id: id,
     });
 
     if (product == undefined || product == null)

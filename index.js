@@ -35,7 +35,7 @@ app.use(
   })
 );
 
-app.use(express.static('app/storage')); //Sacarlos Recursos estaticos de esta carpeta
+app.use(express.static('storage')); //Sacarlos Recursos estaticos de esta carpeta
 
 app.get('/', (req, res) => res.send('Ruta principal'));
 

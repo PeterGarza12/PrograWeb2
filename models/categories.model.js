@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const categoriasSchema = new Schema({
   id          : Number,
   name        : String,
+  image       : String,
 });
 const model = mongoose.model('categorias', categoriasSchema);
 module.exports = model;

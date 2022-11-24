@@ -4,7 +4,7 @@ const ProductService = require('../services/products.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const service = new ProductService();
 //const checkRolHandler = require('../middlewares/checkRol.handler');
-const authHandler = require('../middlewares/auth.handler');
+//const authHandler = require('../middlewares/auth.handler');
 
 const {
   createProductDto,
@@ -35,7 +35,6 @@ router.post(
 
 //Obtener todos los productos en general
 router.get('/',
-authHandler,
  async (req, res) => {
   const { size } = req.query;
   const limit = size || 10;

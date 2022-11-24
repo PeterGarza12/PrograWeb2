@@ -3,13 +3,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 //MODELO DE LA BD
 const productsSchema = new Schema({
-  id          : Number,
+  id          : mongoose.Types.ObjectId,
   name        : String,
   description : String,
   idCategory  : Number,
   image       : String,
   price       : Number,
-  rate        : Number,
   isActive    : Boolean
 });
 const model = mongoose.model('products', productsSchema);
