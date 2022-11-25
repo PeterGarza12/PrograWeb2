@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 //MODELO DE LA BD
 const suggSchema = new Schema({
   id: mongoose.Types.ObjectId,
-  idCategory: String,
+  idCategory: Number,
   idUser: mongoose.Types.ObjectId
 });
 const model = mongoose.model('suggestions', suggSchema);

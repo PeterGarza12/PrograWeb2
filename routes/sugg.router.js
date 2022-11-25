@@ -13,7 +13,7 @@ const {
 
 //Crear sugerencia
 router.post(
-  '/',
+  '/create',
   validatorHandler(createSuggestion, 'body'),
   async (req, res, next) => {
     const body = req.body;

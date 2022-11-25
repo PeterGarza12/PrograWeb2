@@ -99,8 +99,6 @@ router.get(
   }
 );
 
-
-
 //Modificar parcialmente un producto
 router.patch(
   '/:id',

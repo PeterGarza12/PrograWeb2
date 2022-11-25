@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 //SCHEMA PARA DATOS REQUERIDOS Y LOGICA DE NEGOCIO
 const id =          Joi.string();
-const idCategory =  Joi.string();
+const idCategory =  Joi.number().integer();
 const idUser =      Joi.string();
 
 const createSuggestion = Joi.object({
