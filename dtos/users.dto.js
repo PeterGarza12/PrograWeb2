@@ -8,7 +8,6 @@ const password = Joi.string().pattern(new RegExp('^[a-zA-Z0-9\-_]{8}$'));
 const email = Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } });
 const role = Joi.array();
 const phone = Joi.string().min(10).max(10);
-const image = Joi.string();
 
 const createUserDto = Joi.object({
   isActive: isActive.required(),
@@ -17,7 +16,6 @@ const createUserDto = Joi.object({
   email: email.required(),
   role: role.required(),
   phone: phone.required(),
-  image: image.required(),
 });
 
 const getUserIdDto = Joi.object({

@@ -11,8 +11,7 @@ const usersSchema = new Schema({
   role: {
     type: ["user", "admin"],
     default: "user",
-  },  phone: String,
-  image: String
+  },  phone: String
 });
 const model = mongoose.model('users', usersSchema);
 module.exports = model;
