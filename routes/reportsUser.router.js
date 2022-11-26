@@ -34,7 +34,7 @@ router.post(
 router.get(
   '/',
   authHandler,
-  checkRolHandler(["admin"]),
+  checkRolHandler(['admin']),
   async (req, res) => {
     const { size } = req.query;
     const limit = size || 20;
@@ -47,7 +47,7 @@ router.get(
 router.get(
   '/:email',
   authHandler,
-  checkRolHandler(["admin"]),
+  checkRolHandler(['admin']),
   validatorHandler(getReportEmail, 'params'),
   async (req, res, next) => {
     try {
