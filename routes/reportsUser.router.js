@@ -14,8 +14,6 @@ const {
 //Crear reporte por usuario
 router.post(
   '/',
-  authHandler,
-  checkRolHandler(['user']),
   validatorHandler(createReportUser, 'body'),
   async (req, res, next) => {
     const body = req.body;
