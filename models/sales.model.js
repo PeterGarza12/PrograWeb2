@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const salesSchema = new Schema({
   id: mongoose.Types.ObjectId,
   userid: mongoose.Types.ObjectId,
+  email: String,
   products: Array,
   price: Number,
   date: Date

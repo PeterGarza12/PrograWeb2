@@ -1,55 +1,26 @@
 const Joi = require('joi');
 
 //SCHEMA PARA DATOS REQUERIDOS Y LOGICA DE NEGOCIO
-const id          = Joi.string();
-const initDate    = Joi.string();
-const endDate     = Joi.string();
-const mostSellProd= Joi.string();
-const mostSellCat = Joi.string();
-const idCategory  = Joi.string();
+//const id          = Joi.string();
 const idUser      = Joi.string();
-const totalPrice  = Joi.number().integer().min(10);
-const isActive =    Joi.boolean();
-
-const createReportDate = Joi.object({
-  initDate:     initDate.required(),
-  endDate:      endDate.required(),
-  mostSellProd: mostSellProd.required(),
-  mostSellCat:  mostSellCat.required(),
-  totalPrice:   totalPrice.required(),
-  isActive:     isActive.required(),
-});
-
-const createReportCat = Joi.object({
-  idCategory:   idCategory.required(),
-  mostSellProd: mostSellProd.required(),
-  totalPrice:   totalPrice.required(),
-  isActive:     isActive.required(),
-});
+const totalSales  = Joi.number();
+const email       = Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } });
+const totalPrice  = Joi.number();
+const date        = Joi.string();
 
 const createReportUser = Joi.object({
   idUser:       idUser.required(),
-  mostSellProd: mostSellProd.required(),
-  mostSellCat:  mostSellCat.required(),
+  totalSales:   totalSales.required(),
+  email:        email.required(),
   totalPrice:   totalPrice.required(),
-  isActive:     isActive.required(),
+  date:         date.required(),
 });
 
-const createReportGral = Joi.object({
-  mostSellProd: mostSellProd.required(),
-  mostSellCat:  mostSellCat.required(),
-  totalPrice:   totalPrice.required(),
-  isActive:     isActive.required(),
-});
-
-const getReportId = Joi.object({
-  id: id.required(),
+const getReportEmail = Joi.object({
+  email: email.required(),
 });
 
 module.exports = {
-  createReportDate,
-  createReportCat,
   createReportUser,
-  createReportGral,
-  getReportId
+  getReportEmail
 };

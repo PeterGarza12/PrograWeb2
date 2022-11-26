@@ -9,7 +9,7 @@ class ReportService {
   async create(data){
     const model = new Model(data);
     await model.save();
-    return data;
+    return model;
   }
 
   //Mostrar todos los reportes
@@ -26,9 +26,9 @@ class ReportService {
   }
 
   //Mostrar el reporte que quieras mediante su id
-  async getReportById(id){
-    const product = await Model.findOne({
-      _id: id,
+  async getReportByEmail(email){
+    const product = await Model.find({
+      email: email,
     });
 
     if (product == undefined || product == null)

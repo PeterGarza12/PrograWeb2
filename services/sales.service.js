@@ -50,6 +50,17 @@ class SalesService {
     return sales;
   }
 
+  async getByUserEmail(email) {
+    const sales = await Model.find({
+      email: email,
+    });
+    if (sales == undefined || sales == null)
+      throw boom.notFound('No se encontro el registro de compra');
+    else if (sales.length <= 0)
+      throw boom.notFound('No se encontro ningún registro');
+    return sales;
+  }
+
   //Elimina un registro de compra
   async delete(id) {
     let sales = await Model.findOne({

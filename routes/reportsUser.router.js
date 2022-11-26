@@ -6,7 +6,7 @@ const service = new ReportService();
 
 const {
   createReportUser,
-  getReportId
+  getReportEmail
 } = require('../dtos/reports.dto');
 
 //Crear reporte por usuario
@@ -33,7 +33,7 @@ router.get(
   '/',
   async (req, res) => {
     const { size } = req.query;
-    const limit = size || 10;
+    const limit = size || 20;
     const reports = await service.getAll(limit);
     res.json(reports);
   }
@@ -41,12 +41,12 @@ router.get(
 
 //Obtener reporte mediante su id
 router.get(
-  '/:id',
-  validatorHandler(getReportId, 'params'),
+  '/:email',
+  validatorHandler(getReportEmail, 'params'),
   async (req, res, next) => {
     try {
-      const { id } = req.params;
-      const report = await service.getReportById(id);
+      const { email } = req.params;
+      const report = await service.getReportByEmail(email);
       res.json({
         success: true,
         message: 'Este es el reporte encontrado',

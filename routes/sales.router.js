@@ -4,7 +4,7 @@ const SalesService = require('../services/sales.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const service = new SalesService();
 const {
-  createSaleDto, getSaleByIdDto, getSaleByUserIdDto, //getSaleByIdDto, getSaleByUserIdDto
+  createSaleDto, getSaleByIdDto, getSaleByUserEmailDto, //getSaleByIdDto, getSaleByUserIdDto
 } = require('../dtos/sales.dto');
 
 //Crear un registro de compra
@@ -53,14 +53,33 @@ router.get(
   }
 );
 
-//Conseguir registro por id de usuario
+// //Conseguir registro por id de usuario
+// router.get(
+//   '/:userid',
+//   validatorHandler(getSaleByUserIdDto, 'params'),
+//   async(req, res, next) => {
+//     try {
+//       const { userid } = req.params;
+//       const sale = await service.getByUserId(userid);
+//       res.json({
+//         success: true,
+//         message: 'Compras del usuario',
+//         data: sale,
+//       });
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
+
+//Conseguir registro por email de usuario
 router.get(
-  '/user/:userid',
-  validatorHandler(getSaleByUserIdDto, 'params'),
+  '/user/:email',
+  validatorHandler(getSaleByUserEmailDto, 'params'),
   async(req, res, next) => {
     try {
-      const { userid } = req.params;
-      const sale = await service.getByUserId(userid);
+      const { email } = req.params;
+      const sale = await service.getByUserEmail(email);
       res.json({
         success: true,
         message: 'Compras del usuario',
@@ -71,6 +90,7 @@ router.get(
     }
   }
 );
+
 
 //Eliminar un elemento con el id
 router.delete(

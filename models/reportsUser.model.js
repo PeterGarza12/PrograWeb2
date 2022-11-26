@@ -5,10 +5,10 @@ const Schema = mongoose.Schema;
 const reportsUserSchema = new Schema({
   id          : mongoose.Types.ObjectId,
   idUser      : String,
-  mostSellProd: String,
-  mostSellCat : String,
+  email       : String,
+  totalSales  : Number,
   totalPrice  : Number,
-  isActive    : Boolean
+  date        : String
 });
 const model = mongoose.model('reportsUser', reportsUserSchema);
 module.exports = model;
