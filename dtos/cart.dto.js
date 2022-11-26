@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const id = Joi.string();
 const userid = Joi.string();
-const products = Joi.array().items(Joi.string(), Joi.number());
+const products = Joi.array();
 
 const createCartDto = Joi.object({
   userid: userid.required(),

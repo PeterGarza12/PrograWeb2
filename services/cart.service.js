@@ -50,7 +50,22 @@ class CartsService {
     };
 
     const { products } = changes;
-    cart.products = products;
+    cart.products = cart.products.concat(products);
+
+    cart.products = cart.products.reduce((acc, row) => {
+      const existingSel = acc.find(e => e.id === row.id);
+
+      // If we don't have an entry, make one.
+      if (!existingSel) {
+        // Use expansion of row to avoid mutating source objects
+        return [ ...acc, { ...row}];
+      } else{
+        //If we do, add to the existing value
+        existingSel.amount+=row.amount;
+      }
+
+      return acc;
+    }, []);
 
     cart.save();
 
