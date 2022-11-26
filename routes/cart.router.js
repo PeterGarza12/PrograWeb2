@@ -95,4 +95,26 @@ router.patch(
   }
 );
 
+//Actualizar carrito
+router.patch(
+  '/delete/:userid',
+  validatorHandler(getCartByUserIdDto, 'params'),
+  async (req, res) => {
+    try {
+      const { userid } = req.params;
+      const { productid } = req.body;
+      const cart = await service.deleteFromCart(userid, productid);
+      res.json({
+        message: 'update total',
+        data: cart,
+        userid,
+      });
+    } catch (error) {
+      res.status(404).json({
+        message: error.message,
+      });
+    }
+  }
+);
+
 module.exports = router;
