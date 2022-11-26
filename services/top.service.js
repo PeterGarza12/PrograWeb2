@@ -13,7 +13,8 @@ class TopProductService {
 
   async getAll(limit) {
     let response = {};
-    let productsDB = await Model.find();
+    let productsDB = await Model.find().sort({views: -1});
+    //productsDB.sort({views: 1});
 
     //Obtenemos solo la cantidad deseada de registros
     response['topProducts'] = limit
