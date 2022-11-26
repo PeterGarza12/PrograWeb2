@@ -117,4 +117,26 @@ router.patch(
   }
 );
 
+//Limpiar carrito
+router.patch(
+  '/clean/:userid',
+  validatorHandler(getCartByUserIdDto, 'params'),
+  async (req, res) => {
+    try {
+      const { userid } = req.params;
+      const cart = await service.cleanCart(userid);
+      res.json({
+        message: 'clean total',
+        data: cart,
+        userid,
+      });
+    } catch (error) {
+      res.status(404).json({
+        message: error.message,
+      });
+    }
+  }
+);
+
+
 module.exports = router;

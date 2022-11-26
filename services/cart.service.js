@@ -75,6 +75,30 @@ class CartsService {
     };
   }
 
+
+  //Limpiar carrito
+  async cleanCart(userid) {
+    let cart = await Model.findOne({
+      userid: userid,
+    });
+    if (cart == undefined || cart == null)
+      throw boom.notFound('No se encontro el usuario');
+    else if (cart.length <= 0)
+      throw boom.notFound('No se encontro ningún registro');
+
+    let cartOriginal = {
+      products: cart.products
+    };
+
+    cart.update({$set: {"products":[]}}, function(err, data){console.log(err, data)} );
+    cart.save();
+
+    return {
+      original: cartOriginal,
+      actualizado: cart,
+    };
+  }
+
   async deleteFromCart(userid, productid) {
     let cart = await Model.findOne({
       userid: userid,
